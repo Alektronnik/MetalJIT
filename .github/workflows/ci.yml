@@ -34,4 +34,7 @@ jobs:
           METALJIT_LIB=.build/debug/libMetalJITCore.dylib python3 Tests/MetalJITBindingTest.py
 
       - name: XCFramework build (test)
-        run: ./build_framework.sh release
+        run: |
+          brew install xcodegen
+          cd Xcode && xcodegen generate --spec project.yml && cd ..
+          ./build_framework.sh release
