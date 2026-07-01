@@ -3,12 +3,19 @@ import MetalJITCore
 
 // MARK: - Errores de despacho
 
+/// Errores que puede producir el despacho de pipelines.
 public enum ComputeDispatcherError: Error, Equatable {
+    /// El pipeline no existe o fue destruido.
     case invalidHandle
+    /// El buffer de entrada o salida es nulo o tiene tamano incorrecto.
     case invalidBuffer
+    /// El contador de elementos excede Int32.max.
     case overflow
+    /// Datos insuficientes para el pipeline.
     case underflow
+    /// El tipo de dato no coincide con el esperado por el pipeline.
     case typeMismatch
+    /// Error desconocido con codigo numerico.
     case unknown(Int)
 }
 

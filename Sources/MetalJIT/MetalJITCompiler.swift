@@ -3,16 +3,26 @@ import MetalJITCore
 
 // MARK: - Errores de compilacion JIT
 
+/// Errores que puede producir la compilacion JIT de shaders Metal.
 public enum JITCompilerError: Error, Equatable {
+    /// El shader MSL contiene errores de sintaxis o no pudo compilarse.
     case compilationFailed(String)
+    /// El pipeline fue destruido o nunca fue valido.
     case invalidHandle
+    /// Error desconocido con codigo numerico.
     case unknown(Int)
 }
 
 // MARK: - Pipeline compilado
 
 /// Representa un pipeline Metal compilado listo para despachar.
-/// Se destruye automaticamente al llamar a `destroy()` o al ser desasignado.
+///
+/// Un `Pipeline` se obtiene llamando a ``JITCompiler/compile(shaderSource:kernelName:)``
+/// o ``JITCompiler/compile(builtIn:)``. Contiene el estado de GPU necesario para
+/// ejecutar el shader.
+///
+/// Se destruye automaticamente al llamar a ``destroy()`` o al ser desasignado.
+/// Es `Sendable` y puede compartirse entre hilos.
 public final class Pipeline: @unchecked Sendable {
     let handle: MetalJITPipelineHandle
 
