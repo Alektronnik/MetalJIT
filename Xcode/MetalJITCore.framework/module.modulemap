@@ -1,0 +1,7 @@
+framework module MetalJITCore {
+    umbrella header "MetalJITCore.h"
+
+    export *
+
+    module * { export * }
+}

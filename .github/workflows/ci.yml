@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (SPM)
+        run: swift build
+
+      - name: Run Swift runner
+        run: swift run MetalJITRunner
+
+      - name: C integration tests
+        run: |
+          cd Tests
+          clang++ -std=c++17 -O0 -fobjc-arc -x objective-c++ MetalJITBindingTest.mm \
+            -I ../Sources/MetalJITCore/Headers \
+            ../Sources/MetalJITCore/Modules/*.mm \
+            -framework Metal -framework Foundation \
+            -o /tmp/MetalJITBindingTest
+          /tmp/MetalJITBindingTest
+
+      - name: Python integration tests
+        run: |
+          METALJIT_LIB=.build/debug/libMetalJITCore.dylib python3 Tests/MetalJITBindingTest.py
+
+      - name: XCFramework build (test)
+        run: ./build_framework.sh release
